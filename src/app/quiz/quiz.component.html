@@ -1,0 +1,62 @@
+<div class="container">
+  <div *ngIf="questions && !showResults">
+    <p class="text-center">
+      {{ currentQuestionIndex + 1 }} of {{ questions.length }}
+    </p>
+
+    <div *ngIf="questions[currentQuestionIndex]">
+      <h1>{{ questions[currentQuestionIndex].question }}</h1>
+      <form [formGroup]="form">
+        <div class="form-group">
+          <label
+            *ngFor="let answers of questions[currentQuestionIndex].answers_relation"
+            [attr.disabled]="disableForm ? true : null"
+          >
+            <li style="height: 35px;">
+              <span
+                class="choice-container"
+                appBackground
+                [correctAnswer]="answers.is_right_answer"
+                [formDisabled]="disableForm"
+              >
+                <input
+                  type="radio"
+                  [value]="answers"
+                  formControlName="choice"
+                  [attr.disabled]="disableForm ? true : null"
+                />
+                <span>{{ answers.answer }}</span>
+              </span>
+            </li>
+            <p *ngIf="form.value.choice === answers">{{answers.desc}}</p>
+          </label>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div>
+    <button
+      class="btn btn--new"
+      (click)="nextOrViewResults()"
+      [disabled]="!disableForm"
+      *ngIf="!showResults"
+    >
+      {{
+        currentQuestionIndex === questions.length - 1 ? "დასრულება" : "შემდეგი კითხვა"
+      }}
+    </button>
+  </div>
+
+  <div *ngIf="showResults">
+    <p class="text-center">
+      {{ answers.length }} სწორი პასუხი {{ questions.length }} კითხვიდან
+    </p>
+    <button
+      class="btn btn--new"
+      (click)="startAgain()"
+    >
+      თავიდან დაწყება
+    </button>
+  </div>
+</div>
