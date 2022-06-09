@@ -66,7 +66,7 @@ export class QuizComponent implements OnInit {
   }
 
   getResultsText() {
-    if (this.sumOfAnswers > 10) {
+    if (this.sumResults() > 10) {
       return 'You are more of an extrovert!';
     } else {
       return 'You are more of an introvert!';
@@ -74,6 +74,9 @@ export class QuizComponent implements OnInit {
   }
 
   startAgain() {
+    this.sumOfAnswers = 0;
+    this.answers = [];
+    this.form.reset();
     this.router.navigate(['/welcome']);
   }
 }
