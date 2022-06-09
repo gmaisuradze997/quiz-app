@@ -1,62 +1,50 @@
-<div class="container">
-  <div *ngIf="questions && !showResults">
-    <p class="text-center">
-      {{ currentQuestionIndex + 1 }} of {{ questions.length }}
-    </p>
+<div class="quiz-container">
+  <mat-card>
+    <mat-card-content>
+      <div *ngIf="questions && !showResults">
+        <p>{{ currentQuestionIndex + 1 }} of {{ questions.length }}</p>
 
-    <div *ngIf="questions[currentQuestionIndex]">
-      <h1>{{ questions[currentQuestionIndex].question }}</h1>
-      <form [formGroup]="form">
-        <div class="form-group">
-          <label
-            *ngFor="let answers of questions[currentQuestionIndex].answers_relation"
-            [attr.disabled]="disableForm ? true : null"
-          >
-            <li style="height: 35px;">
-              <span
-                class="choice-container"
-                appBackground
-                [correctAnswer]="answers.is_right_answer"
-                [formDisabled]="disableForm"
+        <div *ngIf="questions[currentQuestionIndex]">
+          <h1>{{ questions[currentQuestionIndex].question }}</h1>
+          <form [formGroup]="form">
+            <mat-radio-group class="radio-group" formControlName="answer">
+              <mat-radio-button
+                class="radio-button"
+                *ngFor="
+                  let answers of questions[currentQuestionIndex]
+                    .answers_relation
+                "
+                [value]="answers.point"
               >
-                <input
-                  type="radio"
-                  [value]="answers"
-                  formControlName="choice"
-                  [attr.disabled]="disableForm ? true : null"
-                />
-                <span>{{ answers.answer }}</span>
-              </span>
-            </li>
-            <p *ngIf="form.value.choice === answers">{{answers.desc}}</p>
-          </label>
+                {{ answers.answer }}
+              </mat-radio-button>
+            </mat-radio-group>
+          </form>
         </div>
-      </form>
-    </div>
-  </div>
+      </div>
+      <div>
+        <button
+          mat-raised-button
+          color="accent"
+          (click)="nextOrViewResults()"
+          *ngIf="!showResults"
+          [disabled]="!form.value.answer"
+        >
+          {{
+            currentQuestionIndex === questions.length - 1
+              ? "show result"
+              : "next question"
+          }}
+        </button>
+      </div>
 
-  <div>
-    <button
-      class="btn btn--new"
-      (click)="nextOrViewResults()"
-      [disabled]="!disableForm"
-      *ngIf="!showResults"
-    >
-      {{
-        currentQuestionIndex === questions.length - 1 ? "დასრულება" : "შემდეგი კითხვა"
-      }}
-    </button>
-  </div>
-
-  <div *ngIf="showResults">
-    <p class="text-center">
-      {{ answers.length }} სწორი პასუხი {{ questions.length }} კითხვიდან
-    </p>
-    <button
-      class="btn btn--new"
-      (click)="startAgain()"
-    >
-      თავიდან დაწყება
-    </button>
-  </div>
+      <div *ngIf="showResults">
+        <h1>Result</h1>
+        <p>{{ getResultsText() }}</p>
+        <button mat-raised-button color="primary" (click)="startAgain()">
+          start again
+        </button>
+      </div>
+    </mat-card-content>
+  </mat-card>
 </div>

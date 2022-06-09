@@ -1,4 +1,9 @@
-<div class="text-center">
-  <h1>{{ quizTitle }}</h1>
-  <button class="btn btn--new" (click)="startQuiz()">ტესტის დაწყება</button>
+<div class="welcome-container">
+  <mat-card>
+    <mat-card-content>
+      <h1>{{ quizTitle }}</h1>
+      <button mat-raised-button color="primary" (click)="startQuiz()">start quiz</button>
+    </mat-card-content>
+  </mat-card>
 </div>
+

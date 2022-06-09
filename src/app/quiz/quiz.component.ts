@@ -14,9 +14,10 @@ export class QuizComponent implements OnInit {
   form!: FormGroup;
   quizzes: Quiz[] = [];
   questions: QuestionsRelation[] = [];
-  answers: AnswersRelation[] = [];
+  answers: number[] = [];
   currentQuestionIndex!: number;
   showAnswerDesc: boolean = false;
+  sumOfAnswers: number = 0;
 
   showResults = false;
 
@@ -34,10 +35,8 @@ export class QuizComponent implements OnInit {
 
   createForm() {
     this.form = new FormGroup({
-      choice: new FormControl(),
+      answer: new FormControl(),
     });
-
-    this.form.valueChanges.subscribe(this.onAnswerClick);
   }
 
   getQuizzes() {
@@ -47,23 +46,31 @@ export class QuizComponent implements OnInit {
     });
   }
 
-  onAnswerClick = () => {
-      if (this.form.value.choice.is_right_answer) {
-        this.disableForm = true;
-        this.answers.push(this.form.value.choice);
-      }
-      this.disableForm = true;
-  };
-
   nextOrViewResults() {
+    if (this.form.value.answer) {
+      this.answers.push(this.form.value.answer);
+    }
     if (this.currentQuestionIndex === this.questions.length - 1) {
       this.showResults = true;
       return;
     }
-    this.disableForm = false;
-    this.showAnswerDesc = false;
-    this.form.value.choice = null;
+    this.form.reset();
     this.currentQuestionIndex++;
+  }
+
+  sumResults() {
+    this.answers.forEach((answer) => {
+      this.sumOfAnswers += answer;
+    });
+    return this.sumOfAnswers;
+  }
+
+  getResultsText() {
+    if (this.sumOfAnswers > 10) {
+      return 'You are more of an extrovert!';
+    } else {
+      return 'You are more of an introvert!';
+    }
   }
 
   startAgain() {
